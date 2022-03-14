@@ -68,16 +68,16 @@ const Post = ({ id, username, userImg, img, caption }: UserPost) => {
   useEffect(
     () =>
       setHasLiked(
-        likes.findIndex((like: any) => like.id === userInfo.uid) !== -1
+        likes.findIndex((like: any) => like.id === userInfo?.uid) !== -1
       ),
     [likes]
   )
 
   const likePost = async () => {
     if (hasLiked) {
-      await deleteDoc(doc(db, 'posts', id, 'likes', userInfo.uid))
+      await deleteDoc(doc(db, 'posts', id, 'likes', userInfo?.uid))
     } else {
-      await setDoc(doc(db, 'posts', id, 'likes', userInfo.uid), {
+      await setDoc(doc(db, 'posts', id, 'likes', userInfo?.uid), {
         username: userInfo.username,
       })
     }

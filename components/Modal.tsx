@@ -17,10 +17,16 @@ import { getDownloadURL, ref, uploadString } from 'firebase/storage'
 const Modal = () => {
   const { data: session } = useSession()
   const [open, setOpen] = useRecoilState(modalState)
-  const filePickerRef = useRef(null)
-  const captionRef = useRef(null)
+  const filePickerRef = useRef<any>(null)
+  const captionRef = useRef<any>(null)
   const [loading, setLoading] = useState(false)
   const [selectedFile, setSelectedFile] = useState(null)
+
+  type UserInfo = typeof session & {
+    username: string
+  }
+
+  const userInfo = session?.user as UserInfo
 
   const uploadPost = async () => {
     if (loading) return
@@ -33,7 +39,7 @@ const Modal = () => {
     // 4) Get a download URL from fb storage and update the original post with image
 
     const docRef = await addDoc(collection(db, 'posts'), {
-      username: session?.user?.username,
+      username: userInfo.username,
       caption: captionRef?.current?.value,
       profileImg: session?.user?.image,
       timestamp: serverTimestamp(),
@@ -65,7 +71,7 @@ const Modal = () => {
       reader.readAsDataURL(e.target.files[0])
     }
 
-    reader.onload = (readerEvent) => {
+    reader.onload = (readerEvent: any) => {
       setSelectedFile(readerEvent?.target?.result)
     }
   }

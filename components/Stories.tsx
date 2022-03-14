@@ -17,10 +17,16 @@ const Stories: NextComponentType = () => {
     setSuggestions(suggestions)
   }, [])
 
+  type UserInfo = typeof session & {
+    username: string
+  }
+
+  const userInfo = session?.user as UserInfo
+
   return (
     <div className="mt-8 flex space-x-2 overflow-x-scroll rounded-sm border border-gray-200 bg-white p-6 scrollbar-thin scrollbar-thumb-black">
       {session && (
-        <Story img={session?.user?.image} username={session?.user?.username} />
+        <Story img={session?.user?.image || ''} username={userInfo.username} />
       )}
 
       {suggestions.map<Object>((profile: any) => (

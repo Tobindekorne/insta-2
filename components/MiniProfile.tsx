@@ -3,6 +3,12 @@ import { signOut, useSession } from 'next-auth/react'
 const MiniProfile = () => {
   const { data: session } = useSession()
 
+  type UserInfo = typeof session & {
+    username: string
+  }
+
+  const userInfo = session?.user as UserInfo
+
   return (
     <div className="mt-8 ml-8 flex items-center justify-between">
       <img
@@ -12,7 +18,7 @@ const MiniProfile = () => {
       />
 
       <div className="mx-4 flex-1">
-        <h2 className="font-bold">{session?.user?.username || ''}</h2>
+        <h2 className="font-bold">{userInfo.username || ''}</h2>
         <h3 className="text-sm text-gray-400">Welcome to Instagram</h3>
       </div>
 

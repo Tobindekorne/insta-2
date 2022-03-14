@@ -38,6 +38,13 @@ const Post = ({ id, username, userImg, img, caption }: UserPost) => {
   const [likes, setLikes] = useState([])
   const [hasLiked, setHasLiked] = useState(false)
 
+  type UserInfo = typeof session & {
+    username: string
+    uid: string
+  }
+
+  const userInfo = session?.user as UserInfo
+
   useEffect(
     () =>
       onSnapshot(
@@ -45,14 +52,14 @@ const Post = ({ id, username, userImg, img, caption }: UserPost) => {
           collection(db, 'posts', id, 'comments'),
           orderBy('timestamp', 'desc')
         ),
-        (snapshot) => setComments(snapshot.docs)
+        (snapshot: any) => setComments(snapshot.docs)
       ),
     [db, id]
   )
 
   useEffect(
     () =>
-      onSnapshot(query(collection(db, 'posts', id, 'likes')), (snapshot) =>
+      onSnapshot(query(collection(db, 'posts', id, 'likes')), (snapshot: any) =>
         setLikes(snapshot.docs)
       ),
     [db, id]
@@ -61,22 +68,22 @@ const Post = ({ id, username, userImg, img, caption }: UserPost) => {
   useEffect(
     () =>
       setHasLiked(
-        likes.findIndex((like) => like.id === session?.user?.uid) !== -1
+        likes.findIndex((like: any) => like.id === userInfo.uid) !== -1
       ),
     [likes]
   )
 
   const likePost = async () => {
     if (hasLiked) {
-      await deleteDoc(doc(db, 'posts', id, 'likes', session?.user?.uid))
+      await deleteDoc(doc(db, 'posts', id, 'likes', userInfo.uid))
     } else {
-      await setDoc(doc(db, 'posts', id, 'likes', session.user.uid), {
-        username: session.user.username,
+      await setDoc(doc(db, 'posts', id, 'likes', userInfo.uid), {
+        username: userInfo.username,
       })
     }
   }
 
-  const sendComment = async (e) => {
+  const sendComment = async (e: any) => {
     e.preventDefault()
 
     const commentToSend = comment
@@ -85,7 +92,7 @@ const Post = ({ id, username, userImg, img, caption }: UserPost) => {
 
     await addDoc(collection(db, 'posts', id, 'comments'), {
       comment: commentToSend,
-      username: session?.user?.username,
+      username: userInfo.username,
       userImage: session?.user?.image,
       timestamp: serverTimestamp(),
     })
@@ -141,7 +148,7 @@ const Post = ({ id, username, userImg, img, caption }: UserPost) => {
       {/* comments */}
       {comments.length > 0 && (
         <div className="ml-10 h-20 overflow-y-scroll scrollbar-thin scrollbar-thumb-black">
-          {comments.map((comment) => (
+          {comments.map((comment: any) => (
             <div key={comment.id} className="mb-3 flex items-center space-x-2">
               <img
                 className="h-7 rounded-full"

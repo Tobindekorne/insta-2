@@ -11,7 +11,7 @@ const Posts: NextComponentType = () => {
     () =>
       onSnapshot(
         query(collection(db, 'posts'), orderBy('timestamp', 'desc')),
-        (snapshot) => {
+        (snapshot: any) => {
           setPosts(snapshot.docs)
         }
       ),
@@ -20,7 +20,7 @@ const Posts: NextComponentType = () => {
 
   return (
     <div>
-      {posts.map((post) => (
+      {posts.map((post: any) => (
         <Post
           key={post.id}
           id={post.id}
